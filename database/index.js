@@ -1,10 +1,20 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
-var repoSchema = mongoose.Schema({
-  // TODO: your schema here!
+let db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('successfully connected to the database!!')
+})
+
+let repoSchema = mongoose.Schema({
+  username: String,
+  url: String,
+  forkNum: Number,
+  proPicUrl: String
 });
 
-var Repo = mongoose.model('Repo', repoSchema);
+let Repo = mongoose.model('Repo', repoSchema);
 
 module.exports = Repo;
