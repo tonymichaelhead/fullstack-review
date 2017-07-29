@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,8 +15,32 @@ class App extends React.Component {
   }
 
   search (term) {
+    axios.post('/repos/import', {
+      term: term
+    })
+      .then(result => {
+        console.log('POST successfull: ')
+        // console.log(result);
+        result.data.forEach(item => this.state.repos.push(item));
+        this.setState({ repos: this.state.repos });
+      })
+      .catch(err => {
+        console.log(err);
+      }) 
+
+
     console.log(`${term} was searched`);
-    // TODO
+    
+  }
+
+  componentDidMount() {
+    axios.get('/repos')
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   render () {
