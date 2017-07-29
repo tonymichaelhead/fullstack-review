@@ -16,23 +16,6 @@ var repoSchema = mongoose.Schema({
 });
 
 var Repo = mongoose.model('Repo', repoSchema);
-// var newRep = new Repo({   
-//   username: 'rarttr',
-//   url: 'rasrsrast',
-//   forkNum: 50000,
-//   proPicUrl: 'rasrsrast'
-// })
-
-// newRep.save((err, newRep) => {
-//   if (err) {
-//     console.log(err);
-//   }
-// })
-
-// Repo.find((err, repos) => {
-//   if (err) return console.error(err);
-//   //console.log(repos)
-// });
 
 module.exports = Repo;
 console.log('module exports is ', module.exports)

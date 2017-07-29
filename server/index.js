@@ -29,23 +29,54 @@ app.post('/repos/import', function (req, res) {
           forkNum: item.forks,
           proPicUrl: item.owner.avatar_url
         })
+  
+        Repo.find( { username: newRepo.username }, (error, models) => {
+          console.log( 'found these models: ', models);
+          if (models.length === 0) {
 
-        newRepo.save((err, newRepo) => {
-          if (err) {
-            console.log(err);
+            newRepo.save((err, newRepo) => {
+              if (err) {
+                console.log(err);
+              }
+              console.log('saved newRepo to DB!!')
+            })
+          } else {
+            console.log('didn\'t update because it already exists!')
           }
-          console.log('saved newRepo to DB!!')
-        })
-
+        
+        }) 
+        
+        console.log('AYYYYYYYYYYYYYOOOOOOOOOOOO')
+        
       })
+      //res.status(201).send(dummyData);
     })
     .then(response => {
-      console.log('ayyooooooooo');
+      console.log('Done updating!!')
       res.status(201).send(dummyData);
     })
     .catch(error => {
-      console.log(error);
+      console.log(error)
     })
+    // console.log(dummyData)
+    // dummyData.forEach(item => {
+
+    //   var newRepo = new Repo({   
+    //     username: item.full_name,
+    //     url: item.html_url,
+    //     forkNum: item.forks,
+    //     proPicUrl: item.owner.avatar_url
+    //   })
+    //console.log(error);
+      //  newRepo.save((err, newRepo) => {
+      //     if (err) {
+      //       console.log(err);
+      //     }
+      //     console.log('saved newRepo to DB!!')
+      //   })
+      
+    // })
+
 })
 
 app.get('/repos', function (req, res) {
