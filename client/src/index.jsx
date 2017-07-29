@@ -11,7 +11,7 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
-
+    this.getRepos = this.getRepos.bind(this);
   }
 
   search (term) {
@@ -20,27 +20,30 @@ class App extends React.Component {
     })
       .then(result => {
         console.log('POST successfull: ')
-        // console.log(result);
-        result.data.forEach(item => this.state.repos.push(item));
-        this.setState({ repos: this.state.repos });
+        this.getRepos();
       })
       .catch(err => {
         console.log(err);
       }) 
 
-
     console.log(`${term} was searched`);
     
   }
 
-  componentDidMount() {
+  getRepos() {
     axios.get('/repos')
       .then(result => {
         console.log(result);
+        result.data.forEach(item => this.state.repos.push(item));
+        this.setState({ repos: result.data });
       })
       .catch(err => {
         console.log(err);
       })
+  }
+
+  componentDidMount() {
+    this.getRepos();
   }
 
   render () {

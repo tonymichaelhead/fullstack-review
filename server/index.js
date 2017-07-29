@@ -2,18 +2,35 @@ let express = require('express');
 let axios = require('axios');
 let bodyParser = require('body-parser');
 let dummyData = require('../data.json');
-let Repo = require('../database/index.js')
+let mongoose = require('mongoose');
+var Repo = require('../database/index.js')
 
 let app = express();
-console.log('the Repo is :', JSON.stringify(Repo))
+
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
 
 app.post('/repos/import', function (req, res) {
   //console.log('the req bod is ', req.body);
     //send dummyData for testing purposes
-    res.status(201).send(dummyData);
-  
+    dummyData.forEach(item => {
+
+      var newRepo = new Repo({   
+        username: item.full_name,
+        url: item.html_url,
+        forkNum: item.forks,
+        proPicUrl: item.owner.avatar_url
+      })
+
+      newRepo.save((err, newRepo) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log('saved newRepo to DB!!')
+      })
+    })
+    //For now, send dummyData to the db
+  res.status(201).send(dummyData);
   // let path = 'https://api.github.com/' + req.body.term + '/repos';
   // //fire off post request to github api
   // console.log(path);
