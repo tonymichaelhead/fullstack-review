@@ -13,36 +13,39 @@ app.use(bodyParser.json())
 app.post('/repos/import', function (req, res) {
   //console.log('the req bod is ', req.body);
     //send dummyData for testing purposes
-    dummyData.forEach(item => {
+  let path = 'https://api.github.com/users/' + req.body.term + '/repos';
+  //fire off post request to github api
+  console.log(path);
+  axios.get(path)
+    .then(response => {
+      
+      //take that data and stuff it into the mongo table
+      dummyData = response.data;
+      dummyData.forEach(item => {
 
-      var newRepo = new Repo({   
-        username: item.full_name,
-        url: item.html_url,
-        forkNum: item.forks,
-        proPicUrl: item.owner.avatar_url
-      })
+        var newRepo = new Repo({   
+          username: item.full_name,
+          url: item.html_url,
+          forkNum: item.forks,
+          proPicUrl: item.owner.avatar_url
+        })
 
-      newRepo.save((err, newRepo) => {
-        if (err) {
-          console.log(err);
-        }
-        console.log('saved newRepo to DB!!')
+        newRepo.save((err, newRepo) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log('saved newRepo to DB!!')
+        })
+
       })
     })
-    //For now, send dummyData to the db
-  res.status(201).send(dummyData);
-  // let path = 'https://api.github.com/' + req.body.term + '/repos';
-  // //fire off post request to github api
-  // console.log(path);
-  // axios.post(path)
-  //   .then(response => {
-  //     //take that data and stuff it into the mongo table
-     
-  //     console.log(response);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
+    .then(response => {
+      console.log('ayyooooooooo');
+      res.status(201).send(dummyData);
+    })
+    .catch(error => {
+      console.log(error);
+    })
 })
 
 app.get('/repos', function (req, res) {
