@@ -85,7 +85,7 @@ app.get('/repos', function (req, res) {
     if (err) return console.error(err);
     console.log('DB GET success!! ')
     res.status(200).send(repos); 
-  }).limit(25);
+  }).limit(2000);
 });
 
 const port = 1128;
